@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_13_043912) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_30_040510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "jobs_minions", id: false, force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.bigint "minion_id", null: false
+    t.index ["job_id", "minion_id"], name: "index_jobs_minions_on_job_id_and_minion_id"
+    t.index ["minion_id", "job_id"], name: "index_jobs_minions_on_minion_id_and_job_id"
+  end
 
   create_table "minions", force: :cascade do |t|
     t.string "name"
@@ -25,8 +39,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_13_043912) do
 
   create_table "players", force: :cascade do |t|
     t.string "username"
-    t.string "password"
-    t.string "api_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", default: "", null: false
@@ -34,8 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_13_043912) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.string "authentication_token", limit: 30
-    t.index ["authentication_token"], name: "index_players_on_authentication_token", unique: true
+    t.string "password_digest"
     t.index ["email"], name: "index_players_on_email", unique: true
     t.index ["reset_password_token"], name: "index_players_on_reset_password_token", unique: true
   end

@@ -1,5 +1,6 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: %i[ show update destroy ]
+  before_action :configure_permitted_parameters, only: [:create]
 
   # GET /players
   def index
@@ -15,6 +16,7 @@ class PlayersController < ApplicationController
 
   # POST /players
   def create
+    super
     @player = Player.new(player_params)
 
     if @player.save
@@ -39,13 +41,20 @@ class PlayersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_player
-      @player = Player.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def player_params
-      params.require(:player).permit(:username, :password, :api_key)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_player
+    @player = Player.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def player_params
+    params.require(:player).permit(:username, :email, :password)
+  end
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :username, :password])
+  end
 end

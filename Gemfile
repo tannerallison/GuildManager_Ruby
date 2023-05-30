@@ -9,6 +9,10 @@ gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 gem 'devise', '~> 4.8', '>= 4.8.1'
 gem 'simple_token_authentication', '~> 1.0'
 
+gem 'bcrypt', '~> 3.1', '>= 3.1.16'
+gem 'jwt', '~> 2.2', '>= 2.2.3'
+gem 'rack-cors', '~> 1.1', '>= 1.1.1'
+
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 
