@@ -1,26 +1,20 @@
-class My::MinionsController < AuthenticatedController
+class Api::My::MinionsController < ApplicationController
+  before_action :authenticate
   before_action :set_minion, only: %i[ show update destroy ]
 
   # GET /minions
   def index
-    @minions = current_player.minions
+    @minions = @current_user.minions
 
     render json: @minions
   end
 
-  # GET /minions/1
+  # GET /players/1
   def show
-    render json: @minion
-  end
-
-  # POST /minions
-  def create
-    @minion = Minion.new(minion_params)
-
-    if @minion.save
-      render json: @minion, status: :created, location: @minion
+    if @current_user.minions.include?(@minion)
+      render json: @minion
     else
-      render json: @minion.errors, status: :unprocessable_entity
+      render json: { error: 'Invalid token' }, status: :unauthorized
     end
   end
 
@@ -35,7 +29,8 @@ class My::MinionsController < AuthenticatedController
 
   # DELETE /minions/1
   def destroy
-    @minion.destroy
+    @minion.player_id = nil
+    @minion.save
   end
 
   private

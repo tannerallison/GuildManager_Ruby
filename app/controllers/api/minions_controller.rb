@@ -1,4 +1,4 @@
-class MinionsController < ApplicationController
+class Api::MinionsController < ApplicationController
   before_action :set_minion, only: %i[ show update destroy ]
 
   # GET /minions
@@ -18,7 +18,7 @@ class MinionsController < ApplicationController
     @minion = Minion.new(minion_params)
 
     if @minion.save
-      render json: @minion, status: :created, location: @minion
+      render json: @minion, status: :created
     else
       render json: @minion.errors, status: :unprocessable_entity
     end

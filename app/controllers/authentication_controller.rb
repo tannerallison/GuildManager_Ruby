@@ -9,12 +9,22 @@ class AuthenticationController < ApplicationController
     end
   end
 
-  def authenticate
-    token = request.headers['Authorization'].split(' ').last
-    decoded_token = JWT.decode(token, 'your_secret_key', true, { algorithm: 'HS256' })
-    user_id = decoded_token.first['user_id']
-    @current_user = Player.find(user_id)
-  rescue JWT::DecodeError
-    render json: { error: 'Invalid token' }, status: :unauthorized
+  # POST /register
+  # {
+  #  "username": "test",
+  #  "email": "test@test",
+  #  "password": "test"
+  # }
+  def register
+    if Player.find_by(email: params[:email])
+      throw :error, status: :bad_request, message: 'Email already exists'
+    end
+
+    player = Player.new(username: params[:username], email: params[:email], password: params[:password])
+    if player.save
+      render json: player, status: :created
+    else
+      render json: player.errors, status: :unprocessable_entity
+    end
   end
 end

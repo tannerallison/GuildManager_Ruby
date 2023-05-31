@@ -1,4 +1,4 @@
-class PlayersController < ApplicationController
+class Api::PlayersController < ApplicationController
   before_action :set_player, only: %i[ show update destroy ]
   before_action :configure_permitted_parameters, only: [:create]
 
